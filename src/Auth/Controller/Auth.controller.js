@@ -2,16 +2,14 @@ const User = require("../Model/Auth.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = "MY_SECRET_KEY"; // 👉 move this to .env in real projects
+const JWT_SECRET = "MY_SECRET_KEY"; 
 
-// Signup
+
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password ,confirmPassword} = req.body;
+    const { name, email, password } = req.body;
 
-    if (password === confirmPassword) return res.status(400).json({ error: "Confirm Password not match" });
-
-
+   
     // check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ error: "User already exists" });

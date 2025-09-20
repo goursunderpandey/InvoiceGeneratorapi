@@ -1,8 +1,11 @@
 // server.js
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const PORT = 8080;
 
+
+app.use(cors());
 let Database = require("./Database.js");
 const authRoutes = require("./src/Auth/Route/Auth.route.js");
 
