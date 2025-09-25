@@ -35,22 +35,27 @@ exports.createSale = async (req, res) => {
 exports.getSales = async (req, res) => {
     try {
         const sales = await Sale.find()
-            .populate("CustomerId", "companyName email")   
-            .populate("Items.id", "name");          
+            .populate("CustomerId", "_id companyName email phoneNumber address gstNo")
+            .populate("Items.id", "name");
 
         const formattedSales = sales.map((sale) => {
             const total = sale.Items.reduce((acc, item) => {
                 return acc + (item.qty * item.salePrice);
             }, 0);
 
-           
+
 
             return {
-                saleId: sale._id,                     
+                saleId: sale._id,
                 customerName: sale.CustomerId?.companyName || "Unknown",
                 customerEmail: sale.CustomerId?.email || "",
+                customerphoneNumber : sale.CustomerId?.phoneNumber,
+                customerAddress : sale.CustomerId?.address,
+                customergstNo : sale.CustomerId?.gstNo,
                 saleDate: sale.SaleDate,
                 total: total,
+                customerId: sale.CustomerId?._id,
+                Items: sale.Items
             };
         });
 
@@ -66,11 +71,48 @@ exports.getSales = async (req, res) => {
 exports.getSaleById = async (req, res) => {
     try {
         const sale = await Sale.findById(req.params.id)
-            .populate("CustomerId", "name email")
-            .populate("Items.id", "name");
+            .populate("CustomerId", " _id name email")
+            .populate("Items.id", "name costPrice salePrice qty");
         if (!sale) return res.status(404).json({ error: "Sale not found" });
         res.json({ data: sale });
     } catch (err) {
+        res.status(500).json({ error: "Server error" });
+    }
+};
+
+
+exports.updateSale = async (req, res) => {
+    try {
+        const { id } = req.params; // saleId from URL
+        const { CustomerId, SaleDate, Items } = req.body;
+
+        if (!CustomerId || !SaleDate || !Items || Items.length === 0) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Calculate Grand Total
+        const GrandTotal = Items.reduce((acc, curr) => acc + curr.qty * curr.salePrice, 0);
+
+        const updatedSale = await Sale.findByIdAndUpdate(
+            id,
+            {
+                CustomerId,
+                SaleDate,
+                Items,
+                GrandTotal,
+            },
+            { new: true } // return updated doc
+        )
+            .populate("CustomerId", "companyName email")
+            .populate("Items.id", "name");
+
+        if (!updatedSale) {
+            return res.status(404).json({ error: "Sale not found" });
+        }
+
+        res.json({ message: "Sale updated successfully ✅", data: updatedSale });
+    } catch (err) {
+        console.error("Error updating sale:", err);
         res.status(500).json({ error: "Server error" });
     }
 };

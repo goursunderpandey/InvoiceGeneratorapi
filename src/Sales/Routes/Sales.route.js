@@ -12,4 +12,6 @@ router.get("/allSales", jwtmiddleware, saleController.getSales);
 // Get Sale by ID
 router.get("/sales/:id", jwtmiddleware, saleController.getSaleById);
 
+router.put("/updatesales/:id",jwtmiddleware, saleController.updateSale);
+
 module.exports = router;
