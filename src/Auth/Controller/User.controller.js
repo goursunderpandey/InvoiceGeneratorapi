@@ -37,7 +37,7 @@ exports.Userdetiles = async (req, res) => {
             // Add profile image only if a new file was uploaded
             const currentYear = new Date().getFullYear();
             if (req.file) {
-                updateData.profileImage = `/uploads/${currentYear}/${req.file.filename}`;
+                updateData.profileImage = `${req.file.filename}`;
             }
 
             const updatedUser = await User.findByIdAndUpdate(
@@ -93,7 +93,7 @@ exports.Userdetiles = async (req, res) => {
                 state,
                 city,
                 postalCode,
-                profileImage: req.file ? `/uploads/${currentYear}/${req.file.filename}` : null,
+                profileImage: req.file ? `${req.file.filename}` : null,
             });
 
             await newUser.save();
