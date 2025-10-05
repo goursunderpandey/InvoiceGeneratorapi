@@ -3,7 +3,7 @@ const Item = require("../Modal/Item.modal");
 // Create new item
 exports.createItem = async (req, res) => {
   try {
-    const item = new Item(req.body);
+    const item = new Item({ ...req.body, profileImage: req.file ? `${req.file.filename}` : null });
     await item.save();
     res.status(201).json({ success: true, data: item });
   } catch (err) {
@@ -35,13 +35,14 @@ exports.getItemById = async (req, res) => {
 // Update item
 exports.updateItem = async (req, res) => {
   try {
-    const item = await Item.findByIdAndUpdate(req.params.id, req.body, {
+    const item = await Item.findByIdAndUpdate(req.params.id, { ...req.body, profileImage: req.file ? `${req.file.filename}` : null }, {
       new: true,
       runValidators: true,
     });
     if (!item) return res.status(404).json({ success: false, error: "Item not found" });
     res.status(200).json({ success: true, data: item });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ success: false, error: err.message });
   }
 };

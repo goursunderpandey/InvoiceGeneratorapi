@@ -23,6 +23,7 @@ const itemSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    profileImage: { type: String }
   },
   { timestamps: true }
 );
