@@ -3,13 +3,17 @@ const mongoose = require("mongoose");
 const SaleSchema = new mongoose.Schema({
   CustomerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Customer", 
+    ref: "Customer",
     required: true,
   },
   SaleDate: {
     type: Date,
     required: true,
     default: Date.now,
+  },
+  SaleType: {
+    type: String,
+    required: true
   },
   Items: [
     {

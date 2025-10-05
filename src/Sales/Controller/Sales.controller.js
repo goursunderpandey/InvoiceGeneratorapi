@@ -3,9 +3,9 @@ const Sale = require("../Modal/Sales.modal");
 // Add Sale
 exports.createSale = async (req, res) => {
     try {
-        const { CustomerId, SaleDate, Items } = req.body;
+        const { CustomerId, SaleDate, SaleType ,Items } = req.body;
 
-        if (!CustomerId || !Items || Items.length === 0) {
+        if (!CustomerId || !Items || !SaleType || Items.length === 0) {
             return res.status(400).json({ error: "CustomerId and Items are required" });
         }
 
@@ -15,6 +15,7 @@ exports.createSale = async (req, res) => {
         const newSale = new Sale({
             CustomerId,
             SaleDate,
+            SaleType,
             Items,
             GrandTotal: grandTotal,
         });
@@ -53,6 +54,7 @@ exports.getSales = async (req, res) => {
                 customerAddress : sale.CustomerId?.address,
                 customergstNo : sale.CustomerId?.gstNo,
                 saleDate: sale.SaleDate,
+                SaleType : sale.SaleType,
                 total: total,
                 customerId: sale.CustomerId?._id,
                 Items: sale.Items
@@ -84,7 +86,7 @@ exports.getSaleById = async (req, res) => {
 exports.updateSale = async (req, res) => {
     try {
         const { id } = req.params; // saleId from URL
-        const { CustomerId, SaleDate, Items } = req.body;
+        const { CustomerId, SaleDate,SaleType, Items } = req.body;
 
         if (!CustomerId || !SaleDate || !Items || Items.length === 0) {
             return res.status(400).json({ error: "Missing required fields" });
@@ -98,6 +100,7 @@ exports.updateSale = async (req, res) => {
             {
                 CustomerId,
                 SaleDate,
+                SaleType,
                 Items,
                 GrandTotal,
             },
