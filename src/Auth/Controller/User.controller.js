@@ -10,7 +10,8 @@ exports.Userdetiles = async (req, res) => {
             firstName,
             UserId,
             lastName,
-            userName,
+            companyName,
+            GST_NO,
             phone,
             address,
             country,
@@ -25,7 +26,8 @@ exports.Userdetiles = async (req, res) => {
             const updateData = {
                 firstName,
                 lastName,
-                userName,
+                companyName,
+                GST_NO,
                 phone,
                 address,
                 country,
@@ -74,11 +76,11 @@ exports.Userdetiles = async (req, res) => {
             }
 
             // Check if username already exists
-            const existingUsername = await User.findOne({ userName });
+            const existingUsername = await User.findOne({ companyName });
             if (existingUsername) {
                 return res.status(400).json({
                     success: false,
-                    message: "Username already exists"
+                    message: "companyName already exists"
                 });
             }
             const currentYear = new Date().getFullYear();
@@ -86,7 +88,8 @@ exports.Userdetiles = async (req, res) => {
                 firstName,
                 UserId,
                 lastName,
-                userName,
+                companyName,
+                GST_NO,
                 phone,
                 address,
                 country,
