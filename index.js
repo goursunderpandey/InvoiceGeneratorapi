@@ -11,6 +11,7 @@ const authRoutes = require("./src/Auth/Route/Auth.route.js");
 const Customer = require("./src/Customer/Route/Customer.route.js");
 const Item = require("./src/Item/Route/Item.routes.js");
 const Sales = require("./src/Sales/Routes/Sales.route.js");
+const Supplier = require("./src/Supplier/Route/Supplier.Route.js")
 
 // Middleware
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use("/V1/auth", authRoutes);
 app.use("/V1", Customer);
 app.use("/V1", Item);
 app.use("/V1", Sales);
+app.use("/V1",Supplier);
 
 
 
